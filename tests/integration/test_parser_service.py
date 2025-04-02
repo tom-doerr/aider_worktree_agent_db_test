@@ -34,6 +34,6 @@ def test_parser_service_runs(db_conn):
         # Check for parsed articles created recently
         cur.execute(
             "SELECT COUNT(*) FROM parsed_articles WHERE created_at > %s",
-            (datetime.now() - timedelta(minutes=2),
+            (datetime.now() - timedelta(minutes=2),),
         )
         assert cur.fetchone()[0] > 0, "Parser service did not create parsed articles"

@@ -1,7 +1,7 @@
 import os
 import pytest
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta  # pylint: disable=unused-import
 import psycopg2
 from psycopg2.extras import DictCursor
 
