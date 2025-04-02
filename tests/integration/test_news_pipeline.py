@@ -1,17 +1,28 @@
+import os
 import pytest
 import time
 from datetime import datetime, timedelta
 import psycopg2
 from psycopg2.extras import DictCursor
+from psycopg2 import OperationalError
+
+def get_db_connection():
+    """Helper function to create DB connection with timeout and env vars."""
+    try:
+        conn = psycopg2.connect(
+            host=os.getenv("POSTGRES_HOST", "localhost"),
+            database=os.getenv("POSTGRES_DB", "postgres"),
+            user=os.getenv("POSTGRES_USER", "postgres"),
+            password=os.getenv("POSTGRES_PASSWORD", "postgres"),
+            connect_timeout=3
+        )
+        return conn
+    except OperationalError as e:
+        pytest.skip(f"Skipping test - could not connect to database: {e}")
 
 @pytest.fixture(name="db_conn")
 def db_connection_fixture():
-    conn = psycopg2.connect(
-        host="localhost",
-        database="postgres",
-        user="postgres",
-        password="postgres"
-    )
+    conn = get_db_connection()
     yield conn
     conn.close()
 
